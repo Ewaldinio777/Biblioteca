@@ -10,6 +10,11 @@
         Datos del Libro
       </div>
       <div class="card-body">
+          {% if error %}
+          <div class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+          {% endif %}
         <form action="/subir/guardar" method="post" enctype="multipart/form-data">
 
             <div class="mb-3">
@@ -62,8 +67,6 @@
                 <th>
                     <img width="60" src="/img/{{ libro['imagen'] }}"  class="img-fluid rounded-top"
                          alt="">
-                    {{ libro['imagen'] }}
-
                 </th>
                 <th>
 

@@ -1,12 +1,33 @@
 {% include 'header.html' %}
 
+<style>
+    .card {
+      width: 250px; /* Ajusta este valor según sea necesario */
+      margin: 10px; /* Espacio entre las tarjetas */
+    }
+
+    .card img {
+      width: 100%; /* Asegura que la imagen ocupe todo el ancho del contenedor */
+      height: auto; /* Mantiene la proporción de la imagen */
+    }
+
+    .card-body {
+      text-align: center; /* Centra el contenido dentro de la tarjeta */
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
 <div class="container flex">  <div class="row">
     {% for libro in libros %}
       <div class="col-md-4"> <div class="card">
           <img class="card-img-top" src="/img/{{ libro['imagen']}}" alt="Card image cap">
           <div class="card-body">
             <h4 class="card-title">{{libro['nombre']}}</h4>
-            <a href="{{ libro['url']}}" class="btn btn-primary">Descargar</a>
+            <a href="{{ libro['url']}}" class="btn btn-success">Descargar</a>
           </div>
         </div>
       </div>

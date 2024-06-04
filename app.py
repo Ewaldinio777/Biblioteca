@@ -29,7 +29,7 @@ def img(imagen):
     return send_from_directory(os.path.join('Template/img'), imagen)
 
 @app.route("/css/<archivocss>")
-def css(archivocss):
+def css_link(archivocss):
     return send_from_directory(os.path.join('Template/css'), archivocss)
 
 @app.route('/libros')
@@ -65,9 +65,15 @@ def libros_guardar():
     _url = request.form['txtURL']
     _archivo = request.files['txtImagen']
 
-    print(_nombre)
-    print(_url)
-    print(_archivo)
+    def obtener_libros():
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM libros")
+        libros = cur.fetchall()
+        cur.close()
+        return libros
+
+    if not _nombre or not _url or not _archivo:
+        return render_template('subir.html', error="Todos los campos son obligatorios", libros=obtener_libros())
 
     tiempo= datetime.now()
     horaActual=tiempo.strftime('%Y%H%M%S')
@@ -81,7 +87,9 @@ def libros_guardar():
     cur.execute(" INSERT INTO libros (nombre, url, imagen) VALUES (%s, %s, %s)", (_nombre, _url, nuevoNombre))
     mysql.connection.commit()
 
-    return redirect('/libros')
+
+
+    return redirect('/subir')
 
 @app.route('/libros/borrar', methods=['POST'])
 def borrar():
