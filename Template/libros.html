@@ -1,0 +1,19 @@
+{% include 'header.html' %}
+
+<div class="container flex">  <div class="row">
+    {% for libro in libros %}
+      <div class="col-md-4"> <div class="card">
+          <img class="card-img-top" src="/img/{{ libro['imagen']}}" alt="Card image cap">
+          <div class="card-body">
+            <h4 class="card-title">{{libro['nombre']}}</h4>
+            <a href="{{ libro['url']}}" class="btn btn-primary">Descargar</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+    
+

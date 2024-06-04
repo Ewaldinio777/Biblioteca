@@ -1,0 +1,95 @@
+{% include 'header.html' %}
+
+<div class="container">
+  <div class="row">
+    <div
+      class="col-md-5"
+    >
+    <div class="card">
+      <div class="card-header">
+        Datos del Libro
+      </div>
+      <div class="card-body">
+        <form action="/subir/guardar" method="post" enctype="multipart/form-data">
+
+            <div class="mb-3">
+                <label for="txtNombre" class="form-label">Nombre:</label>
+                <input type="text" class="form-control" name="txtNombre" id="txtNombre" aria-describedby="helpId" placeholder="Escriba el nombre del libro">
+            </div>
+
+            <div class="mb-3">
+                <label for="txtImagen">imagen:</label>
+                <input type="file" class="form-control" name="txtImagen" id="txtImagen" aria-describedby="helpId" placeholder="Selecciona la imagen">
+            </div>
+            
+
+            <div class="mb-3">
+                <label for="txtURL">URL Descarga:</label>
+                <input type="text" class="form-control" name="txtURL" id="txtURL" aria-describedby="helpId" placeholder="Escriba la URL">
+            </div>
+
+            <button type="submit" class="btn btn-primary" href="/subir">Agregar</button>
+
+
+        </form>
+         
+
+      </div>
+      <div class="card-footer text-muted">
+
+      </div>
+    </div>
+    </div>
+    <div
+      class="col-md-7">
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Imagen</th>
+                <th>URL</th>
+                <th>Acciones</th>
+            </tr>
+
+            </thead>
+            <tbody>
+            {% for libro in libros %}
+            <tr>
+                <th>{{ libro['id'] }}</th>
+                <th>{{ libro['nombre'] }}</th>
+                <th>
+                    <img width="60" src="/img/{{ libro['imagen'] }}"  class="img-fluid rounded-top"
+                         alt="">
+                    {{ libro['imagen'] }}
+
+                </th>
+                <th>
+
+                    <a name="" id="" class="btn btn-success" href="{{ libro['url'] }}"
+                       role="button">Enlace</a>
+                </th>
+                <th>
+                    <form action="/libros/borrar" method="post">
+                        <input value="{{ libro['id']}}" type="hidden" name="txtID" id="txtID">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </th>
+            </tr>
+            {% endfor %}
+
+            <tr>
+                <td scope="row"></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    
+  </div>
+</div>
+
+
