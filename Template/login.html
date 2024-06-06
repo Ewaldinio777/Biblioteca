@@ -3,6 +3,7 @@
 <head>
 	<title>Biblioteca Virtual</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="icon" href="img/logo.png" type="image/x-icon">
 </head>
 
 <body>
@@ -15,7 +16,7 @@
 			<div class="row justify-content-sm-center h-100">
 				<div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
 					<div class="text-center my-5">
-						<img src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="logo" width="100">
+						<img src="img/logo.png" alt="logo" width="200px">
 					</div>
 					<div class="card shadow-lg">
 						<div class="card-body p-5">
@@ -27,6 +28,12 @@
 								{{ mensaje }}
 							</div>
 							     {%  endif %}
+
+							{% if mensaje3 %}
+         					 <div class="alert alert-danger" role="alert">
+           					 {{ mensaje3 }}
+								 </div>
+							{% endif %}
 							<!---Mensaje de Registro exitoso-->
 
 							 {% if mensaje2 %}
@@ -65,7 +72,7 @@
 						</div>
 					</div>
 					<div class="text-center mt-5 text-muted">
-						Copyright &copy; 2017-2021 &mdash; Your Company
+						Copyright &copy; 2024 &mdash; Biblioteca Virtual
 					</div>
 				</div>
 			</div>
