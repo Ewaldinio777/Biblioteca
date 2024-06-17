@@ -6,31 +6,36 @@ from datetime import datetime
 from flask import send_from_directory
 
 
-app = Flask(__name__,template_folder='Template')
+app = Flask(__name__, template_folder='Template')
 
-app.config['MYSQL_HOST']='localhost'
-app.config['MYSQL_USER']='root'
-app.config['MYSQL_PASSWORD']=''
-app.config['MYSQL_DB']='biblioteca'
-app.config['MYSQL_CURSORCLASS']='DictCursor'
-mysql=MySQL(app)
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'biblioteca'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+mysql = MySQL(app)
+
 
 @app.route('/')
 def home():
     return render_template('login.html')
 
+
 @app.route('/admin')
 def admin():
     return render_template('admin.html')
+
 
 @app.route('/img/<imagen>')
 def img(imagen):
     print(imagen)
     return send_from_directory(os.path.join('Template/img'), imagen)
 
+
 @app.route("/css/<archivocss>")
 def css_link(archivocss):
     return send_from_directory(os.path.join('Template/css'), archivocss)
+
 
 @app.route('/libros')
 def libros():
@@ -42,9 +47,11 @@ def libros():
 
     return render_template('libros.html', libros=libros)
 
+
 @app.route('/nosotros')
 def nosotros():
     return render_template('nosotros.html')
+
 
 @app.route('/subir')
 def subir():
@@ -58,6 +65,7 @@ def subir():
     cur.close()
     print(libros)
     return render_template('subir.html', libros=libros)
+
 
 @app.route('/subir/guardar', methods=['POST'])
 def libros_guardar():
@@ -75,21 +83,21 @@ def libros_guardar():
     if not _nombre or not _url or not _archivo:
         return render_template('subir.html', error="Todos los campos son obligatorios", libros=obtener_libros())
 
-    tiempo= datetime.now()
-    horaActual=tiempo.strftime('%Y%H%M%S')
+    tiempo = datetime.now()
+    horaActual = tiempo.strftime('%Y%H%M%S')
 
-    nuevoNombre=""
-    if _archivo.filename!="":
-        nuevoNombre=horaActual+"_"+_archivo.filename
+    nuevoNombre = ""
+    if _archivo.filename != "":
+        nuevoNombre = horaActual+"_"+_archivo.filename
         _archivo.save("Template/img/"+nuevoNombre)
 
     cur = mysql.connection.cursor()
-    cur.execute(" INSERT INTO libros (nombre, url, imagen) VALUES (%s, %s, %s)", (_nombre, _url, nuevoNombre))
+    cur.execute(" INSERT INTO libros (nombre, url, imagen) VALUES (%s, %s, %s)",
+                (_nombre, _url, nuevoNombre))
     mysql.connection.commit()
 
-
-
     return redirect('/subir')
+
 
 @app.route('/libros/borrar', methods=['POST'])
 def borrar():
@@ -113,22 +121,25 @@ def borrar():
     cur.close()
     return redirect('/subir')
 
+
 @app.route('/cerrar')
 def login_cerrar():
     session.clear()
     return redirect('/')
 
-#Funcion de Login
+# Funcion de Login
 
-@app.route('/acceso-login', methods= ["GET", "POST"])
+
+@app.route('/acceso-login', methods=["GET", "POST"])
 def login():
 
     if request.method == 'POST' and 'txtCorreo' in request.form and 'txtPassword':
         _correo = request.form['txtCorreo']
         _password = request.form['txtPassword']
 
-        cur=mysql.connection.cursor()
-        cur.execute('SELECT * FROM usuarios WHERE correo = %s AND password = %s', (_correo, _password))
+        cur = mysql.connection.cursor()
+        cur.execute(
+            'SELECT * FROM usuarios WHERE correo = %s AND password = %s', (_correo, _password))
         account = cur.fetchone()
 
         if account:
@@ -141,26 +152,28 @@ def login():
             return render_template('login.html', mensaje="Usuario o clave incorrecta")
 
 
-#Funcion de Registro
+# Funcion de Registro
 
 @app.route('/registro')
 def registro():
     return render_template('registro.html')
 
-@app.route('/crear-registro', methods= ["GET", "POST"])
+
+@app.route('/crear-registro', methods=["GET", "POST"])
 def crear_registro():
 
-    correo=request.form['txtCorreo']
+    correo = request.form['txtCorreo']
     password = request.form['txtPassword']
     nombre = request.form['txtNombre']
 
-
     cur = mysql.connection.cursor()
-    cur.execute(" INSERT INTO usuarios (nombre, correo, password) VALUES (%s, %s, %s)", (nombre, correo, password))
+    cur.execute(" INSERT INTO usuarios (nombre, correo, password) VALUES (%s, %s, %s)",
+                (nombre, correo, password))
     mysql.connection.commit()
 
     return render_template("login.html", mensaje2="Usuario registrado exitosamente!")
 
+
 if __name__ == '__main__':
-    app.secret_key="Luis2863"
+    app.secret_key = "Luis2863"
     app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
