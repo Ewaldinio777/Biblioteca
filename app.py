@@ -28,7 +28,6 @@ def admin():
 
 @app.route('/img/<imagen>')
 def img(imagen):
-    print(imagen)
     return send_from_directory(os.path.join('Template/img'), imagen)
 
 
@@ -39,6 +38,9 @@ def css_link(archivocss):
 
 @app.route('/libros')
 def libros():
+
+    if not 'logueado' in session:
+        return redirect('/')
 
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM libros")
@@ -56,15 +58,14 @@ def nosotros():
 @app.route('/subir')
 def subir():
 
-    if not 'logueado' in session:
-        return redirect('/')
+    if 'logueado' not in session or session['id_rol'] != 1:
+        return render_template('login.html', mensaje3= "Solo los administradores pueden subir libros, por favor inicia sesión con una cuenta de administrador para poder acceder")
 
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM libros")
     libros = cur.fetchall()
     cur.close()
-    print(libros)
-    return render_template('subir.html', libros=libros)
+    return render_template('subir.html', libros=libros, )
 
 
 @app.route('/subir/guardar', methods=['POST'])
@@ -145,6 +146,7 @@ def login():
         if account:
             session['logueado'] = True
             session['id'] = account['id']
+            session['id_rol'] = account['id_rol']
 
             return render_template("admin.html")
         else:
